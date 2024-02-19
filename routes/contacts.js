@@ -40,6 +40,24 @@ router.get('/:id', function(req, res, next) {
     });
 });
 
+// GET route to display the edit contact form
+router.get('/:id/edit', function(req, res, next) {
+    var dataPath = path.join(__dirname, '..', 'data', 'contacts.json');
+    fs.readFile(dataPath, 'utf8', (err, data) => {
+        if (err) {
+            next(err);
+        } else {
+            var contacts = JSON.parse(data);
+            var contact = contacts.find(contact => contact.id === req.params.id);
+            if (contact) {
+                res.render('edit-contact', { title: 'Edit Contact', contact: contact });
+            } else {
+                res.status(404).send('Contact not found');
+            }
+        }
+    });
+});
+
 // POST route for deleting a contact
 router.post('/:id/delete', function(req, res, next) {
     var dataPath = path.join(__dirname, '..', 'data', 'contacts.json');
@@ -56,6 +74,38 @@ router.post('/:id/delete', function(req, res, next) {
                     res.redirect('/contacts');
                 }
             });
+        }
+    });
+});
+
+// POST route to update a contact
+router.post('/:id/update', function(req, res, next) {
+    var dataPath = path.join(__dirname, '..', 'data', 'contacts.json');
+    fs.readFile(dataPath, 'utf8', (err, data) => {
+        if (err) {
+            next(err);
+        } else {
+            var contacts = JSON.parse(data);
+            var index = contacts.findIndex(contact => contact.id === req.params.id);
+            if (index !== -1) {
+                // Update contact details
+                contacts[index].firstName = req.body.firstName.trim();
+                contacts[index].lastName = req.body.lastName.trim();
+                contacts[index].email = req.body.email.trim();
+                contacts[index].notes = req.body.notes.trim();
+                contacts[index].timestamp = new Date().toISOString(); // Update timestamp
+                
+                // Write updated contacts back to file
+                fs.writeFile(dataPath, JSON.stringify(contacts, null, 2), (err) => {
+                    if (err) {
+                        next(err);
+                    } else {
+                        res.redirect('/contacts/' + req.params.id);
+                    }
+                });
+            } else {
+                res.status(404).send('Contact not found');
+            }
         }
     });
 });
