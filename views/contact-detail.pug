@@ -1,0 +1,26 @@
+doctype html
+html
+  head
+    title #{title}
+    link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css')
+  body
+    .container
+      h1.text-center #{title}
+      .card
+        .card-body
+          h5.card-title #{contact.firstName} #{contact.lastName}
+          p.card-text Email: #{contact.email}
+          p.card-text Notes: #{contact.notes}
+          p.card-text Created/Modified: #{contact.timestamp}
+          // Add 'mr-2' class for margin-right
+          a.btn.btn-primary.mr-4(href=`/contacts/${contact.id}/edit`) Edit
+          button.btn.btn-danger(type='button' onclick='confirmDelete()') Delete
+
+          script.
+            function confirmDelete() {
+              var conf = confirm("Are you sure you want to delete this contact?");
+              if(conf) {
+                // Implement deletion logic here, typically submitting a form or redirecting to a route that handles deletion.
+                window.location.href = '/contacts/delete/${contact.id}'; // Placeholder for deletion route
+              }
+            }
