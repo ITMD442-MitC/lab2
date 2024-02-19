@@ -4,6 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+//custom Method
+var methodOverride = require('method-override');
 //Index Route
 var indexRouter = require('./routes/index');
 //Contacts Route
@@ -23,6 +25,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//custom Method
+app.use(methodOverride('_method'));
 //Index Route
 app.use('/', indexRouter);
 //Contacts Route
