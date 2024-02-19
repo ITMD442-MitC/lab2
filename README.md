@@ -32,7 +32,7 @@ npm install
 ```
 4. Start the application:
 ```
-npm start
+npm run dev
 ```
 5. Open a web browser and navigate to `http://localhost:3000` to access the application.
 
